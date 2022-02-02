@@ -6,20 +6,28 @@ namespace SHA
 	using ui8 = uint8_t; 
 	using ui32 = uint32_t; 
 	using ui64 = uint64_t;
-	
-	constexpr ui32 SHFR(ui32 const& x, ui8 const& n) 
+	template<typename T> 
+	constexpr T SHFR(T const& x, ui8 const& n) 
 	{
-		assert(n<32);
+		assert(n < (sizeof(T)*8));
 		return x>>n;
 	}
-	constexpr ui32 SHFL(ui32 const& x, ui8 const& n) 
+	template<typename T> 
+	constexpr T SHFL(T const& x, ui8 const& n) 
 	{
-		assert(n<32);
+		assert(n < (sizeof(T)*8));
 		return x<<n;
 	}
-	
-
-
+	template<typename T> 
+	constexpr T RTR(T const& x, ui8 const& n)
+	{
+		return (x >> n) | (x << ((sizeof(x) << 3) - n));
+	}
+	template<typename T> 
+	constexpr T RTL(T const& x, ui8 const& n)
+	{
+		return (x << n) | (x >> ((sizeof(x) << 3) - n));
+	}
 	class Sha256
 	{
 		Sha256();		
