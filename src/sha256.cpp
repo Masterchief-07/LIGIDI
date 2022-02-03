@@ -50,6 +50,7 @@ void Sha256::Block(string::const_iterator const& it_begin, string::const_iterato
 	if (partsize < (_blockSize - 8))
 	{
 		std::copy(it_begin, it_end, _block.begin());
+		//unpack from 64 to 8
 		*(_block.end()-1) = _textSizeBits;
 		*(_block.end()-2) = _textSizeBits >> 8;
 		*(_block.end()-3) = _textSizeBits >> 16;
@@ -130,17 +131,17 @@ void Sha256::Comput(string const& text)
 	_textSize = text.size();
 	_textSizeBits = _textSize*8;
 //std::cout<<"textsize: "<<_textSize<<" bits: "<<_textSizeBits<<" ";
-	const size_t nb = _textSize/64;
-	const size_t diff = _textSize - nb*64;
-	//nb+=((_textSize - nb*64) <= 55)? 0:1;
-//std::cout<<"diff: "<<_textSize - nb*64<<" ";
-//std::cout<<"nb: "<<nb<<" ";
+	const size_t nb64rep = _textSize/64;
+	const size_t diff = _textSize - nb64rep*64;
+	//nb64rep+=((_textSize - nb64rep*64) <= 55)? 0:1;
+//std::cout<<"diff: "<<_textSize - nb64rep*64<<" ";
+//std::cout<<"nb64rep: "<<nb64rep<<" ";
 	size_t delta = 0;
 	//Block each segment of text
-	for(size_t i=0; i <= nb; ++i)
+	for(size_t i=0; i <= nb64rep; ++i)
 	{
 		auto start = text.cbegin()+i*delta;
-		delta = (i<nb)? 64:_textSize - nb*64;
+		delta = (i<nb64rep)? 64:_textSize - nb64rep*64;
 //std::cout<<"delta: "<<delta<<"\n";
 		auto end = (delta < 64)? text.end():start+delta;
 		Block(start, end);
