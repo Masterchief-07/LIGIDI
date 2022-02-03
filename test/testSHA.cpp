@@ -16,11 +16,13 @@ int main()
 	//sha.Preprocessing(abc.begin(), abc.end());
 	std::string abc2{"abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz"};
 	std::string abc3{"abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijkl"};
-	sha.Sha(abc);
+	std::string test4{"kiendrebeogo jonathan"};
+	std::string test5{"I can find some ways to do it, but they mostly seem targeted towards C. It doesn't seem there's a native way to do it in C++. It is a pretty simple problem though; I've got an int which I'd like to convert to a hex string for later printing."};
+	//sha.Sha(abc);
 cout<<"\n";
 	//sha.Sha(abc2);
 cout<<"\n";
-	//sha.Sha(abc3);
+	sha.Sha(test5);
 
 	//test shift right
 	//std::cout<<std::bitset<32>{0x05}<<"\t"<<std::bitset<32>{0x02}<<"\n";

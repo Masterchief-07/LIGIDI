@@ -14,7 +14,7 @@ namespace SHA
 	{
 		private:
 			const size_t _blockSize{64};
-			size_t _textSize;
+			size_t _textSize, _textSizeBits;
 			static const array<ui32,64> K;
 			array<ui8, 64> 	_block;
 			array<ui32, 64> _wBlock;

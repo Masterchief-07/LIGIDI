@@ -23,7 +23,7 @@ const array<ui32,64> Sha256::K = {
 		0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
-Sha256::Sha256():_textSize{0},_block{0},_wBlock{0}
+Sha256::Sha256():_textSize{0},_textSizeBits{0},_block{0},_wBlock{0}
 {
 	_hash[0] = 0x6a09e667;
 	_hash[1] = 0xbb67ae85;
@@ -47,14 +47,14 @@ std::cout<<"distance: "<<partsize<<"\n";
 	if (partsize < (_blockSize - 8))
 	{
 		std::copy(it_begin, it_end, _block.begin());
-		*(_block.end()-1) = _textSize;
-		*(_block.end()-2) = _textSize << 8;
-		*(_block.end()-3) = _textSize << 16;
-		*(_block.end()-4) = _textSize << 24;
-		*(_block.end()-5) = _textSize << 32;
-		*(_block.end()-6) = _textSize << 40;
-		*(_block.end()-7) = _textSize << 48;
-		*(_block.end()-8) = _textSize << 56;
+		*(_block.end()-1) = _textSizeBits;
+		*(_block.end()-2) = _textSizeBits >> 8;
+		*(_block.end()-3) = _textSizeBits >> 16;
+		*(_block.end()-4) = _textSizeBits >> 24;
+		*(_block.end()-5) = _textSizeBits >> 32;
+		*(_block.end()-6) = _textSizeBits >> 40;
+		*(_block.end()-7) = _textSizeBits >> 48;
+		*(_block.end()-8) = _textSizeBits >> 56;
 	}
 	else
 	{
@@ -128,7 +128,8 @@ void Sha256::Transform()
 void Sha256::Sha(string const& text)
 {
 	_textSize = text.size();
-std::cout<<"textsize: "<<_textSize<<" ";
+	_textSizeBits = _textSize*8;
+std::cout<<"textsize: "<<_textSize<<" bits: "<<_textSizeBits<<" ";
 	const size_t nb = _textSize/64;
 	const size_t diff = _textSize - nb*64;
 	//nb+=((_textSize - nb*64) <= 55)? 0:1;
@@ -150,5 +151,8 @@ std::cout<<"delta: "<<delta<<"\n";
 
 	}
 
-	std::cout<<std::setbase(16)<<_hash[0]<<_hash[1]<<_hash[2]<<_hash[3]<<_hash[4]<<_hash[5]<<_hash[6]<<_hash[7]<<"\n";
+	std::cout<<"\nhash value : ";
+	for(auto const& i: _hash)
+		std::cout<<std::setfill ('0') << std::setw(sizeof(_hash[0])*2)<<std::hex<<i;
+	std::cout<<"\n";
 }
