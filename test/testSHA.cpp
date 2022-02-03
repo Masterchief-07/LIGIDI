@@ -9,6 +9,19 @@ using namespace BINARY;
 
 int main()
 {
+	//test SHA lib
+	Sha256 sha;
+	//std::string abc{"abcasdbasdhbajbslkuhavsdkjhvasjdhvasghvdjahsvdkjavdkjahsvdkjhajsdvjahvsdjhavsdhjvajskdhvajkhsdvjkahsvdjk"};
+	std::string abc{"abc"};
+	//sha.Preprocessing(abc.begin(), abc.end());
+	std::string abc2{"abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz"};
+	std::string abc3{"abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijkl"};
+	sha.Sha(abc);
+cout<<"\n";
+	//sha.Sha(abc2);
+cout<<"\n";
+	//sha.Sha(abc3);
+
 	//test shift right
 	//std::cout<<std::bitset<32>{0x05}<<"\t"<<std::bitset<32>{0x02}<<"\n";
 	assert(SHFR(ui32(0x05), 1) == ui32(0x02));
