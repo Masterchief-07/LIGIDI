@@ -9,26 +9,6 @@ using namespace BINARY;
 
 int main()
 {
-	//test SHA lib
-	Sha256 sha;
-	//std::string abc{"abcasdbasdhbajbslkuhavsdkjhvasjdhvasghvdjahsvdkjavdkjahsvdkjhajsdvjahvsdjhavsdhjvajskdhvajkhsdvjkahsvdjk"};
-	std::string test1{"abc"};
-	//sha.Preprocessing(abc.begin(), abc.end());
-	std::string test2{"abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz"};
-	std::string test3{"abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijkl"};
-	std::string test4{"kiendrebeogo jonathan"};
-	std::string test5{"I can find some ways to do it, but they mostly seem targeted towards C. It doesn't seem there's a native way to do it in C++. It is a pretty simple problem though; I've got an int which I'd like to convert to a hex string for later printing."};
-	assert(sha.Sha(test1) == "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
-	std::cout<<"SHA TEST1 : OK"<<"\n";
-	assert(sha.Sha(test2) == "9948de85a44aca196f4689728fef8edbdb0520ec6eec0fd2d25b09a71228dd85");
-	std::cout<<"SHA TEST2 : OK"<<"\n";
-	assert(sha.Sha(test3) == "04ccef6c541148a8d468d1f5100af4d29e6f051cb7736e3c0ced0bdb503d0650");
-	std::cout<<"SHA TEST3 : OK"<<"\n";
-	assert(sha.Sha(test4) == "f263c338690e7343a3a580fea62e7b0085b9ba9d2390c5bcefa65d574b2065eb");
-	std::cout<<"SHA TEST4 : OK"<<"\n";
-	assert(sha.Sha(test5) == "ec1da18ba957f7c5bc27c9236501926d11d2386eabb40a982641835aa525aeca");
-	std::cout<<"SHA TEST5 : OK"<<"\n";
-
 	//test shift right
 	//std::cout<<std::bitset<32>{0x05}<<"\t"<<std::bitset<32>{0x02}<<"\n";
 	assert(SHFR(ui32(0x05), 1) == ui32(0x02));
@@ -75,6 +55,24 @@ int main()
 	//std::cout<<std::bitset<32>{x}<<"\t"<<std::bitset<32>{USIGMA1(ui32(0x00003FFF))}<<"\n";
 	assert(MAJ(x,y,z) == ui32(0x00FF00FF));
 	std::cout<<"SHA MAJ OK"<<"\n";
+
+//test SHA lib
+	Sha256 sha;
+	std::string test1{"abc"};
+	std::string test2{"abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz"};
+	std::string test3{"abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijkl"};
+	std::string test4{"kiendrebeogo jonathan"};
+	std::string test5{"I can find some ways to do it, but they mostly seem targeted towards C. It doesn't seem there's a native way to do it in C++. It is a pretty simple problem though; I've got an int which I'd like to convert to a hex string for later printing."};
+	assert(sha.Sha(test1) == "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
+	std::cout<<"SHA TEST1 : OK"<<"\n";
+	assert(sha.Sha(test2) == "9948de85a44aca196f4689728fef8edbdb0520ec6eec0fd2d25b09a71228dd85");
+	std::cout<<"SHA TEST2 : OK"<<"\n";
+	assert(sha.Sha(test3) == "04ccef6c541148a8d468d1f5100af4d29e6f051cb7736e3c0ced0bdb503d0650");
+	std::cout<<"SHA TEST3 : OK"<<"\n";
+	assert(sha.Sha(test4) == "f263c338690e7343a3a580fea62e7b0085b9ba9d2390c5bcefa65d574b2065eb");
+	std::cout<<"SHA TEST4 : OK"<<"\n";
+	assert(sha.Sha(test5) == "ec1da18ba957f7c5bc27c9236501926d11d2386eabb40a982641835aa525aeca");
+	std::cout<<"SHA TEST5 : OK"<<"\n";
 
 
 	return 0;

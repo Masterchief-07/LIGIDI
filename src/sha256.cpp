@@ -40,7 +40,7 @@ void Sha256::Init()
 }
 
 //process the text to get a 64bytes array
-void Sha256::Comput(string::const_iterator const& it_begin, string::const_iterator const& it_end)
+void Sha256::Block(string::const_iterator const& it_begin, string::const_iterator const& it_end)
 {
 	size_t const partsize = std::distance(it_begin, it_end);
 //std::cout<<"distance: "<<partsize<<"\n";
@@ -67,12 +67,12 @@ void Sha256::Comput(string::const_iterator const& it_begin, string::const_iterat
 //	cout<<int(i)<<" ";
 //cout<<"\n partsize:" << partsize<<"\n";
 
-	this->Parsing();
+	this->WBlock();
 	this->Transform();
 }
 
 //transform _block of 8bit*64 array into a _wblock of 32bit*64
-void Sha256::Parsing()
+void Sha256::WBlock()
 {
 //cout<<"PARSING"<<"\n";
 	for(size_t i = 0, j=0; i < 16; i++, j+=4)
@@ -88,7 +88,7 @@ void Sha256::Parsing()
 //cout<<"\n";
 }
 
-//computation
+//Blockation
 void Sha256::Transform()
 {
 	ui32 a{_hash[0]}
@@ -125,10 +125,8 @@ void Sha256::Transform()
 	_hash[7] += h;
 }
 
-//SHA operations
-string Sha256::Sha(string const& text)
+void Sha256::Comput(string const& text)
 {
-	this->Init();
 	_textSize = text.size();
 	_textSizeBits = _textSize*8;
 //std::cout<<"textsize: "<<_textSize<<" bits: "<<_textSizeBits<<" ";
@@ -138,21 +136,26 @@ string Sha256::Sha(string const& text)
 //std::cout<<"diff: "<<_textSize - nb*64<<" ";
 //std::cout<<"nb: "<<nb<<" ";
 	size_t delta = 0;
-	//comput each segment of text
+	//Block each segment of text
 	for(size_t i=0; i <= nb; ++i)
 	{
 		auto start = text.cbegin()+i*delta;
 		delta = (i<nb)? 64:_textSize - nb*64;
 //std::cout<<"delta: "<<delta<<"\n";
 		auto end = (delta < 64)? text.end():start+delta;
-		Comput(start, end);
+		Block(start, end);
 	}
 	if (diff > 55) //if the last part of the text is sup to 55 we nee to add another block
 	{
-		Comput(text.end(), text.end());
-
+		Block(text.end(), text.end());
 	}
+}
 
+//SHA operations
+string Sha256::Sha(string const& text)
+{
+	this->Init();
+	this->Comput(text);
 	stringstream ss;
 	for(auto const& i: _hash)
 		ss<<std::setfill ('0') << std::setw(sizeof(_hash[0])*2)<<std::hex<<i;

@@ -22,8 +22,9 @@ namespace SHA
 		public:
 			Sha256();
 			void Init();
-			void Comput(string::const_iterator const& it_begin, string::const_iterator const& it_end);
-			void Parsing();
+			void Comput(string const& text);
+			void Block(string::const_iterator const& it_begin, string::const_iterator const& it_end);
+			void WBlock();
 			void Transform();
 			string Sha(string const& text);
 
