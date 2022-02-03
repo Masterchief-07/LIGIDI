@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 using namespace SHA;
 using namespace BINARY;
 const array<ui32,64> Sha256::K = {
@@ -23,7 +24,10 @@ const array<ui32,64> Sha256::K = {
 		0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
-Sha256::Sha256():_textSize{0},_textSizeBits{0},_block{0},_wBlock{0}
+Sha256::Sha256():_textSize{0},_textSizeBits{0},_block{0},_wBlock{0},_hash{0}
+{}
+
+void Sha256::Init()
 {
 	_hash[0] = 0x6a09e667;
 	_hash[1] = 0xbb67ae85;
@@ -33,14 +37,13 @@ Sha256::Sha256():_textSize{0},_textSizeBits{0},_block{0},_wBlock{0}
 	_hash[5] = 0x9b05688c;
 	_hash[6] = 0x1f83d9ab;
 	_hash[7] = 0x5be0cd19;
-
 }
 
 //process the text to get a 64bytes array
-void Sha256::Preprocessing(string::const_iterator const& it_begin, string::const_iterator const& it_end)
+void Sha256::Comput(string::const_iterator const& it_begin, string::const_iterator const& it_end)
 {
 	size_t const partsize = std::distance(it_begin, it_end);
-std::cout<<"distance: "<<partsize<<"\n";
+//std::cout<<"distance: "<<partsize<<"\n";
 	assert(partsize < 65);
 	std::fill(_block.begin(), _block.end(), 0);
 	if (partsize < 64 && partsize!=0) _block[partsize] = 0x80;
@@ -60,9 +63,9 @@ std::cout<<"distance: "<<partsize<<"\n";
 	{
 		std::copy(it_begin, it_end, _block.begin());
 	}
-for(auto const& i : _block)
-	cout<<int(i)<<" ";
-cout<<"\n partsize:" << partsize<<"\n";
+//for(auto const& i : _block)
+//	cout<<int(i)<<" ";
+//cout<<"\n partsize:" << partsize<<"\n";
 
 	this->Parsing();
 	this->Transform();
@@ -71,7 +74,7 @@ cout<<"\n partsize:" << partsize<<"\n";
 //transform _block of 8bit*64 array into a _wblock of 32bit*64
 void Sha256::Parsing()
 {
-cout<<"PARSING"<<"\n";
+//cout<<"PARSING"<<"\n";
 	for(size_t i = 0, j=0; i < 16; i++, j+=4)
 	{
 		_wBlock[i] = (_block[j] << 24 | _block[j+1] << 16 | _block[j+2] << 8 | _block[j+3] );
@@ -80,11 +83,9 @@ cout<<"PARSING"<<"\n";
 	{
 		_wBlock[i] = SIGMA1(_wBlock[i-2]) + _wBlock[i-7] + SIGMA0(_wBlock[i-15]) + _wBlock[i-16];
 	}
-for(auto const& i : _wBlock)
-{
-std::cout<<i<<" ";
-}
-cout<<"\n";
+//for(auto const& i : _wBlock)
+//	std::cout<<i<<" ";
+//cout<<"\n";
 }
 
 //computation
@@ -125,34 +126,37 @@ void Sha256::Transform()
 }
 
 //SHA operations
-void Sha256::Sha(string const& text)
+string Sha256::Sha(string const& text)
 {
+	this->Init();
 	_textSize = text.size();
 	_textSizeBits = _textSize*8;
-std::cout<<"textsize: "<<_textSize<<" bits: "<<_textSizeBits<<" ";
+//std::cout<<"textsize: "<<_textSize<<" bits: "<<_textSizeBits<<" ";
 	const size_t nb = _textSize/64;
 	const size_t diff = _textSize - nb*64;
 	//nb+=((_textSize - nb*64) <= 55)? 0:1;
-std::cout<<"diff: "<<_textSize - nb*64<<" ";
-std::cout<<"nb: "<<nb<<" ";
+//std::cout<<"diff: "<<_textSize - nb*64<<" ";
+//std::cout<<"nb: "<<nb<<" ";
 	size_t delta = 0;
 	//comput each segment of text
 	for(size_t i=0; i <= nb; ++i)
 	{
 		auto start = text.cbegin()+i*delta;
 		delta = (i<nb)? 64:_textSize - nb*64;
-std::cout<<"delta: "<<delta<<"\n";
+//std::cout<<"delta: "<<delta<<"\n";
 		auto end = (delta < 64)? text.end():start+delta;
-		Preprocessing(start, end);
+		Comput(start, end);
 	}
 	if (diff > 55) //if the last part of the text is sup to 55 we nee to add another block
 	{
-		Preprocessing(text.end(), text.end());
+		Comput(text.end(), text.end());
 
 	}
 
-	std::cout<<"\nhash value : ";
+	stringstream ss;
 	for(auto const& i: _hash)
-		std::cout<<std::setfill ('0') << std::setw(sizeof(_hash[0])*2)<<std::hex<<i;
-	std::cout<<"\n";
+		ss<<std::setfill ('0') << std::setw(sizeof(_hash[0])*2)<<std::hex<<i;
+//	std::cout<<ss.str();
+
+	return ss.str();
 }
