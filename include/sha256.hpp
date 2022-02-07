@@ -1,7 +1,7 @@
 #pragma once
-#include <cstdint>
-#include <cassert>
 #include "binary.hpp"
+#include <cstdint>
+#include <string>
 #include <array>
 namespace SHA
 {

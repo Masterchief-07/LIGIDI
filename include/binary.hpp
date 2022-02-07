@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <cassert>
 using ui8 = uint8_t; 
 using ui32 = uint32_t; 
 using ui64 = uint64_t;

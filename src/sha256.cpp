@@ -3,6 +3,8 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <cassert>
+
 using namespace SHA;
 using namespace BINARY;
 const array<ui32,64> Sha256::K = {
