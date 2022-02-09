@@ -3,12 +3,14 @@ params = -Wall -Wextra -pedantic -Werror -lstdc++ -std=c++17
 source = ../src
 include = ../include
 
-
-all: testSHA
+all: testSHA testUIntBase
 
 
 testSHA: testSHA.cpp $(source)/sha256.cpp
-	$(CC) $(params) -I$(include) $(source)/sha256.cpp testSHA.cpp -o testSHA
+	$(CC) $(params) -I$(include) $^ -o $@
+
+testUIntBase: testUIntBase.cpp 
+	$(CC) $(params) -I$(include) $^ -o $@
 
 clean:
 	rm -rf testSHA
