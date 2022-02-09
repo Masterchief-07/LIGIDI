@@ -2,8 +2,9 @@ CC = clang
 params = -Wall -Wextra -pedantic -Werror -lstdc++ -std=c++17
 source = ../src
 include = ../include
+alltest = testSHA testUIntBase testRandom
 
-all: testSHA testUIntBase
+all: $(alltest)
 
 
 testSHA: testSHA.cpp $(source)/sha256.cpp
@@ -12,5 +13,8 @@ testSHA: testSHA.cpp $(source)/sha256.cpp
 testUIntBase: testUIntBase.cpp 
 	$(CC) $(params) -I$(include) $^ -o $@
 
+testRandom: testRandom.cpp
+	$(CC) $(params) -I$(include) $^ -o $@
+
 clean:
-	rm -rf testSHA
+	rm -rf $(alltest) 

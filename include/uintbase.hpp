@@ -5,14 +5,18 @@
 namespace lgd
 {
 template<size_t SIZE>
-class UIntBase
+class UInt
 {
+    static_assert(SIZE % 8 == 0);
     static constexpr size_t _size = SIZE/8;
     std::array<uint8_t, _size>_data;
     
     public:
-    UIntBase();
-    UIntBase(std::string const& text);
+    UInt();
+    UInt(std::string const& text);
+
+    uint8_t operator[](size_t pos) const { return _data[pos];}
+    uint8_t& operator[](size_t pos){ return _data[pos];}
 
     auto begin() { return _data.begin();}
     auto begin() const { return _data.cbegin();}
@@ -25,11 +29,11 @@ class UIntBase
 };
 
 template<size_t SIZE>
-UIntBase<SIZE>::UIntBase():_data{0}
+UInt<SIZE>::UInt():_data{0}
 {}
 
 template<size_t SIZE>
-UIntBase<SIZE>::UIntBase(std::string const& text)
+UInt<SIZE>::UInt(std::string const& text)
 {
     assert(text.size() == _data.size());
     std::copy(text.begin(), text.end(), _data.begin());
