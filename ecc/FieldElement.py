@@ -28,34 +28,21 @@ class FieldElement:
         if self.prime != other.prime: raise TypeError("prime num a different")
         return FieldElement((self.num*other.num)%self.prime, self.prime)
     
-    def __pow__(self, other: object) -> object:
-        if self.prime != other.prime: raise TypeError("prime num a different")
-        return FieldElement((self.num**other.num)%self.prime, self.prime)
+    def __pow__(self, exponent) -> object:
+        n = exponent % (self.prime - 1)
+        num = pow(self.num, n, self.prime)
+        return FieldElement(num, self.prime)
 
     def __neg__(self) -> object:
         return FieldElement((-self.num)%self.prime, self.prime)
     
-
-    
-a = FieldElement(7,13)
-b = FieldElement(6,13)
-c = a+b
-d = a-b
-print(a==b)
-print(a!=b)
-print(a==a)
-
-print(c)
-print(-c)
-print(d)
-print(-d)
-
-print(FieldElement(44, 57) + FieldElement(33, 57))
-print(FieldElement(9, 57) - FieldElement(29, 57))
-
-print(FieldElement(17, 57) + FieldElement(42, 57) + FieldElement(49, 57))
-print(FieldElement(52, 57) - FieldElement(30, 57) - FieldElement(38, 57))
-
-print(FieldElement(95, 97) * FieldElement(45, 97) * FieldElement(31, 97))
-print(FieldElement(17, 97) * FieldElement(13, 97) * FieldElement(19, 97) * FieldElement(44, 97))
-print(FieldElement(12, 97) ** FieldElement(77, 97))
+    def __truediv__(self, other):
+        if self.prime != other.prime:
+            raise TypeError('Cannot divide two numbers in different Fields')
+        # use fermat's little theorem:
+        # self.num**(p-1) % p == 1
+        # this means:
+        # 1/n == pow(n, p-2, p)
+        # We return an element of the same class
+        p = self * other**-1
+        return p
